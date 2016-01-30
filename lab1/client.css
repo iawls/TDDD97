@@ -34,10 +34,6 @@
     padding: 5px;
 }
 
-.logininfo input, select{
-    float: right;
-}
-
 #loginView{
     margin-top: 0px;
 }
@@ -48,14 +44,27 @@
 
 input, select{
     width: 120px;
-    height: 25px;
+    height: 20px;
     font-size: 12;
+	float: right;
 }
 
 label{
-    font-size: 12;
+    font-size: 14;
+	margin-top: 5px;
+	float: left;
+	width: 246px;
 }
 
 h3{
     text-align: center;
+}
+
+#contendView{
+
+    border-style: solid;
+    border-width: 2px;
+	width: 100px;
+	height: 100px;
+
 }
