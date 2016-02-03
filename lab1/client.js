@@ -9,23 +9,31 @@ init = function(){
   //Get the content we want
   var contentView = document.getElementById("contentView");
   var welcomeView = document.getElementById("welcomeView");
-  
+  var profileView = document.getElementById("profileView");
   //Paste that mofo in there
-  contentView.innerHTML = welcomeView.innerHTML;
+  
+  if(localStorage.getItem("token") != null){
+	  //Logged in, load Profile View
+	  contentView.innerHTML = profileView.innerHTML;
+  }else{
+	  //Not logged in, load welcomeView
+	  contentView.innerHTML = welcomeView.innerHTML;
+  }
 }
 
 
 login = function(form){
 	//TODO
-	var user = {username: form.email.value, password: form.password.value};
-	var response = serverstub.signIn(user);
-	
-	alert(response.message.value);
+	//var user = {username: form.email.value, password: form.password.value};
+	var response = serverstub.signIn(form.email.value, form.password.value);
 	
 	if(response.success == true){
 		//Logged in, fix token etc
+		localStorage.setItem("token", response.data);
+		
 	}else{
 		//Not logged in, promt user to try again
+		alert(response.message);
 	}
 }
 
