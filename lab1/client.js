@@ -30,7 +30,7 @@ login = function(form){
 }
 
 signup = function(form){
-	if(signupValidation(form) == true){
+	if(signupValidation(form)){
 		//This creates a submission object with the values email, password, firstname, familyname, gender, city and country. 
 		var submission = {email: form.email.value, password: form.password1.value, firstname: form.fname.value, familyname: form.lname.value, gender: form.gender.value, city: form.city.value, country: form.country.value};
 		//It sends it onwards to the server.
@@ -38,6 +38,7 @@ signup = function(form){
 		//this tells the user if the creation was succesful or not
 		alert(result.message);
 	}
+	return false
 }
 
 signupValidation = function(form){
@@ -45,13 +46,13 @@ signupValidation = function(form){
 	var pwd1 = form.password1.value;
 	var pwd2 = form.password2.value;
 	//check so the password is the correct length
-	if(pwd1.length < 6){
+	if(form.password1.value.length < 6){
 		alert("Your password has to be at least 6 characters long!");
 		return false;
 	}
 		
 	//check so the passwords match
-	if(!pwd1 == pwd2){
+	if(form.password1.value != form.password2.value){
 		alert("The passwords does not match");
 		return false;
 	}

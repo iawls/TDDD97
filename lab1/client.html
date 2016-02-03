@@ -34,7 +34,7 @@
       <div id="signup"class="views">
 		<h3>Sign up here</h3>
 		<div id="signupView">
-			<form>
+			<form onsubmit="signup(this); return false;">
 				<div class="infoField">
 					<label>
 						First name: 	  
@@ -44,7 +44,7 @@
 				<div class="infoField">
 				  <label>
 					Family name: 	
-					<input type="text" name="lname" size="18" "required">
+					<input type="text" name="lname" size="18" required>
 				  </label>
 				</div>
 				<div class="infoField">
@@ -88,7 +88,7 @@
 				  </label>
 				</div>
 				<div class="infoField">
-				  <input type="submit" value="Sign up" onclick="signup(this.form)">
+				  <input type="submit" value="Sign up">
 					</div>
 				</form>
 			</div>
