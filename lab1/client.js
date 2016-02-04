@@ -70,6 +70,8 @@ passwordValidation = function(pwd1, pwd2){
 	return true;
 }
 
+/*profileView*/
+
 changePassword = function(form){
 	console.log("change password");
 	
@@ -79,7 +81,16 @@ changePassword = function(form){
 	}
 }
 
-/*profileView*/
+logout = function(){
+	if(localStorage.getItem("token") != null){
+		localStorage.removeItem("token");
+		init();
+	}else{
+		alert("A problem occurred during log out")
+	}
+}
+	
+
 tabClick = function(tab){
 	
 	console.log("Tab clicked");
