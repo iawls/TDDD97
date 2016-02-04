@@ -24,7 +24,23 @@ herpaderp BROWSE
 </div>
 
 <div class="tab" id="Account">
-herpaderp Account
+<form onsubmit="signup(this); return false;">
+	<div class="infoField">
+	  <label>
+		Old password: 	  
+		<input type="password" name="oldPassword" required>
+	  </label>
+	</div>
+	<div class="infoField">
+	  <label>
+		New password: 	
+		<input type="password" name="newPassword" required>
+	  </label>
+	</div>
+	<div class="infoField">
+	  <input type="submit" value="Create new password">
+	</div>
+  </form>
 </div>
 </div>
 </body>
