@@ -90,11 +90,11 @@ nav li:hover{
 }
 
 #Browse{
-    display: block;
+    display: none;
 }
 
 #Home{
-    display: none;
+    display: block;
 }
 
 #Account{
