@@ -38,7 +38,7 @@ login = function(form){
 }
 
 signup = function(form){
-	if(signupValidation(form)){
+	if(passwordValidation(form.password1.value, form.password2.value)){
 		//This creates a submission object with the values email, password, firstname, familyname, gender, city and country. 
 		var submission = {email: form.email.value, password: form.password1.value, firstname: form.fname.value, familyname: form.lname.value, gender: form.gender.value, city: form.city.value, country: form.country.value};
 		//It sends it onwards to the server.
@@ -49,18 +49,18 @@ signup = function(form){
 	return false
 }
 
-signupValidation = function(form){
+passwordValidation = function(pwd1, pwd2){
 	
-	var pwd1 = form.password1.value;
-	var pwd2 = form.password2.value;
+	//var pwd1 = form.password1.value;
+	//var pwd2 = form.password2.value;
 	//check so the password is the correct length
-	if(form.password1.value.length < 6){
+	if(pwd1.length < 6){
 		alert("Your password has to be at least 6 characters long!");
 		return false;
 	}
 		
 	//check so the passwords match
-	if(form.password1.value != form.password2.value){
+	if(pwd1 != pwd2){
 		alert("The passwords does not match");
 		return false;
 	}
@@ -68,4 +68,48 @@ signupValidation = function(form){
 	//all the other checks are done by HTML5 in the client.html document by using required tags and email-type where necessary.
 	
 	return true;
+}
+
+/*profileView*/
+
+changePassword = function(form){
+	console.log("change password");
+	
+	if(passwordValidation(form.newPassword1.value, form.newPassword2.value)){
+		var response = serverstub.changePassword(localStorage.getItem("token"), form.currPassword.value, form.newPassword1.value);
+		alert(response.message);
+	}
+}
+
+logout = function(){
+	if(localStorage.getItem("token") != null){
+		localStorage.removeItem("token");
+		init();
+	}else{
+		alert("A problem occurred during log out")
+	}
+}
+	
+
+tabClick = function(tab){
+	
+	console.log("Tab clicked");
+	var home = document.getElementById("Home");
+	var browse = document.getElementById("Browse");
+	var account = document.getElementById("Account");
+	
+	home.style.display = "none";
+	browse.style.display = "none";
+	account.style.display = "none";
+
+	if(tab == Home) {
+		home.style.display = "block";
+	} else if(tab == Browse) {
+		browse.style.display = "block";
+	} else if(tab == Account) {
+		account.style.display = "block";
+	}else{
+		console.log("Error in tabClick()");
+	}
+		
 }
