@@ -1,38 +1,22 @@
 
 
-homeClick = function(){
+tabClick = function(tab){
 	
-	alert("derp");
+	console.log("Tab clicked");
 	var home = document.getElementById("Home");
 	var browse = document.getElementById("Browse");
 	var account = document.getElementById("Account");
 	
-	home.attributes.display = "block";
+	home.attributes.display = "none";
 	browse.attributes.display = "none";
 	account.attributes.display = "none";
-	
-}
 
-browseClick = function(){
+	if(tab == "Home") {
+		home.attributes.display = "block";
+	} else if(tab == "Browse") {
+		browse.attributes.display = "block";
+	} else if(tab == "Account") {
+		browse.attributes.display = "block";
+	}
 		
-	var home = document.getElementById("Home");
-	var browse = document.getElementById("Browse");
-	var account = document.getElementById("Account");
-	
-	home.attributes.display = "none";
-	browse.attributes.display = "block";
-	account.attributes.display = "none";
-	
-}
-
-accountClick = function(){
-	
-	var home = document.getElementById("Home");
-	var browse = document.getElementById("Browse");
-	var account = document.getElementById("Account");
-	
-	home.attributes.display = "none";
-	browse.attributes.display = "none";
-	account.attributes.display = "block";
-	
 }
