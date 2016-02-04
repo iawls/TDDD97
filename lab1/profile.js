@@ -7,16 +7,18 @@ tabClick = function(tab){
 	var browse = document.getElementById("Browse");
 	var account = document.getElementById("Account");
 	
-	home.attributes.display = "none";
-	browse.attributes.display = "none";
-	account.attributes.display = "none";
+	home.style.display = "none";
+	browse.style.display = "none";
+	account.style.display = "none";
 
-	if(tab == "Home") {
-		home.attributes.display = "block";
-	} else if(tab == "Browse") {
-		browse.attributes.display = "block";
-	} else if(tab == "Account") {
-		browse.attributes.display = "block";
+	if(tab == Home) {
+		home.style.display = "block";
+	} else if(tab == Browse) {
+		browse.style.display = "block";
+	} else if(tab == Account) {
+		account.style.display = "block";
+	}else{
+		console.log("Error in tabClick()");
 	}
 		
 }
