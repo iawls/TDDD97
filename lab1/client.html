@@ -97,7 +97,51 @@
 	</script>
 
 	<script type="text/view" id="profileView">
-	HerpaDerp
+	<div id="main">
+		<nav>
+			<ul>
+				<li onClick="tabClick(Home);">Home</li>
+				<li onClick="tabClick(Browse)">Browse</li>
+				<li onClick="tabClick(Account)">Account</li>
+			</ul>
+		</nav>
+
+		<div class="tab" id="Home">
+		herpaderp HOME
+		</div>
+
+		<div class="tab" id="Browse">
+		herpaderp BROWSE
+		</div>
+
+		<div class="tab" id="Account">
+			<div id="acc_container">
+			<form onsubmit="signup(this); return false;">
+				<div class="infoField">
+				  <label>
+					Current password: 	  
+					<input type="password" name="currPassword" required>
+				  </label>
+				</div>
+				<div class="infoField">
+				  <label>
+					New password: 	
+					<input type="password" name="newPassword1" required>
+				  </label>
+				</div>
+				<div class="infoField">
+				  <label>
+					Repeat password:  	
+					<input type="password" name="newPassword2" required>
+				  </label>
+				</div>
+				<div class="infoField">
+				  <input type="submit" value="Change password">
+				</div>
+			  </form>
+		  	</div>
+		</div>
+	</div>
 	</script>
 </head>
 <body>

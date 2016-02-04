@@ -68,3 +68,39 @@ h3{
 	height: 100px;
 
 }
+
+/*profileView*/
+.tab{
+    border-style: solid;
+    border-width: 2px;
+    width: 596px;
+    height: 396px;
+}
+
+nav li{
+    display: inline;
+    border: solid;
+    border-radius: 5px;
+    padding: 10px;
+    border-width: 1px 1px 1px 1px;
+}
+
+nav li:hover{
+    background-color: lightblue;
+}
+
+#Browse{
+    display: block;
+}
+
+#Home{
+    display: none;
+}
+
+#Account{
+    display: none;
+}
+
+#acc_container{
+     width: 246px;
+}

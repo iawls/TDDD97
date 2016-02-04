@@ -27,18 +27,24 @@ herpaderp BROWSE
 <form onsubmit="signup(this); return false;">
 	<div class="infoField">
 	  <label>
-		Old password: 	  
-		<input type="password" name="oldPassword" required>
+		Current password: 	  
+		<input type="password" name="currPassword" required>
 	  </label>
 	</div>
 	<div class="infoField">
 	  <label>
 		New password: 	
-		<input type="password" name="newPassword" required>
+		<input type="password" name="newPassword1" required>
 	  </label>
 	</div>
 	<div class="infoField">
-	  <input type="submit" value="Create new password">
+	  <label>
+		Repeat password:  	
+		<input type="password" name="newPassword2" required>
+	  </label>
+	</div>
+	<div class="infoField">
+	  <input type="submit" value="Change password">
 	</div>
   </form>
 </div>
