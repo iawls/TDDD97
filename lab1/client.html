@@ -106,13 +106,85 @@
 			</ul>
 		</nav>
 
-		<div class="tab" id="Home">
-		herpaderp HOME
+	<div class="tab" id="Home">
+			<div id="homeMain">
+    <div id="info">
+		<label id="homeName">
+		
+		</label>
+		
+		<label id="homeGender">
+		
+		</label>
+		
+		<label id="homeCity">
+		
+		</label>
+		
+		<label id="homeCountry">
+		
+		</label>
+		
+		<label id="homeEmail">
+		
+		</label>
+	</div>
+	
+	<div id="wall">
+		<div id="wallContent">
 		</div>
-
-		<div class="tab" id="Browse">
-		herpaderp BROWSE
+		<button onClick="getMessages();">Refresh</button>
+	</div>
+	
+	<div id="post">
+		<form onsubmit="post(this); return false;">
+			<textarea id="postText" name="postData" required></textarea>
+			<input type="submit" value="Post"></input>
+		</form>
+	</div>
+	</div>
+	</div>
+	<div class="tab" id="Browse">
+		<div id="browseMain">
+			<div id="browseInfo">
+				<form onsubmit="browseUser(this); return false;">
+					<input type="email" name="email" required></input>
+					<input type="submit" value="Browse"></input>
+				</form>
+				<label id="browseName">
+				
+				</label>
+				
+				<label id="browseGender">
+				
+				</label>
+				
+				<label id="browseCity">
+				
+				</label>
+				
+				<label id="browseCountry">
+				
+				</label>
+				
+				<label id="browseEmail">
+				
+				</label>
+			</div>
+		
+			<div id="browseWall">
+				<div id="browseWallContent"></div>
+				<button onClick="refreshWall();">Refresh</button>
+			</div>
+		
+			<div id="browsePost">
+				<form onsubmit="browsePost(this); return false;">
+					<textarea id="browsePostText" name="browsePostData" required></textarea>
+					<input type="submit" value="Post"></input>
+				</form>
+			</div>
 		</div>
+	</div>
 
 		<div class="tab" id="Account">
 			<div id="acc_container">

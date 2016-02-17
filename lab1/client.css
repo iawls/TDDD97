@@ -30,9 +30,6 @@
     float: right;
 }
 
-.infoFields{
-    padding: 5px;
-}
 
 #loginView{
     margin-top: 0px;
@@ -58,15 +55,6 @@ label{
 
 h3{
     text-align: center;
-}
-
-#contendView{
-
-    border-style: solid;
-    border-width: 2px;
-	width: 100px;
-	height: 100px;
-
 }
 
 /*profileView*/
@@ -104,3 +92,91 @@ nav li:hover{
 #acc_container{
      width: 246px;
 }
+ /* Home tab */
+#wall, #browseWall{
+    width: 336px;
+    height: 396px;
+    float: right;
+	
+	border-left-style: solid;
+    border-width: 2px;
+}
+
+#post{
+    width: 246px;
+    height: 262px;
+    float: left;
+	margin-top: 10px;
+	
+	border-right-style: solid;
+	border-top-style: solid;
+    border-width: 2px;
+}
+
+#info{
+    width: 246px;
+    height: 120px;
+    float: left;
+	
+	border-bottom-style: solid;
+	border-right-style: solid;
+    border-width: 2px;
+}
+
+#homeMain{
+	width: 600px;
+	height: 400px;
+}
+
+#postText, #browsePostText{
+	width: 244px;
+	height: 200px;
+	
+	margin: 1px;
+}
+
+
+#wallContent, #browseWallContent{
+	width: 332px;
+    height: 346px;
+	overflow-y: scroll;
+	
+	border-width: 1px;
+	border-bottom-style: solid;
+}
+
+.message{
+	padding: 10px;
+	border-width: 1px;
+	border-bottom-style: solid;
+
+}
+
+/* Browse */
+
+
+#browseInfo{
+    width: 246px;
+    height: 150px;
+    float: left;
+	
+	border-bottom-style: solid;
+	border-right-style: solid;
+    border-width: 2px;
+}
+
+
+#browsePost{
+	width: 246px;
+    height: 232px;
+    float: left;
+	margin-top: 10px;
+	
+	border-right-style: solid;
+	border-top-style: solid;
+    border-width: 2px;
+
+}
+
+
+

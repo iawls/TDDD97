@@ -15,6 +15,8 @@ init = function(){
   if(localStorage.getItem("token") != null){
 	  //Logged in, load Profile View
 	  contentView.innerHTML = profileView.innerHTML;
+	  getUserData();
+	  getMessages();
   }else{
 	  //Not logged in, load welcomeView
 	  contentView.innerHTML = welcomeView.innerHTML;
@@ -104,6 +106,7 @@ tabClick = function(tab){
 
 	if(tab == Home) {
 		home.style.display = "block";
+		getMessages();
 	} else if(tab == Browse) {
 		browse.style.display = "block";
 	} else if(tab == Account) {
@@ -112,4 +115,92 @@ tabClick = function(tab){
 		console.log("Error in tabClick()");
 	}
 		
+}
+
+
+/*Home tab*/
+
+getUserData = function(){
+	
+	var token = localStorage.getItem("token");
+	var userData = serverstub.getUserDataByToken(token);
+	
+	document.getElementById("homeName").innerHTML = "Name: "+userData.data.firstname+" "+userData.data.familyname;
+	document.getElementById("homeGender").innerHTML = "Gender: "+userData.data.gender;
+	document.getElementById("homeCity").innerHTML = "City: "+userData.data.city;
+	document.getElementById("homeCountry").innerHTML = "Country: "+userData.data.country;
+	document.getElementById("homeEmail").innerHTML = "Email: "+userData.data.email;
+}
+
+post = function(postText){
+
+	var token = localStorage.getItem("token");
+	var user = serverstub.getUserDataByToken(token);
+	var email = user.data.email;
+	
+	console.log(postText.postData.value);
+	var message = serverstub.postMessage(token, postText.postData.value, email);
+	
+	getMessages();
+}
+
+getMessages = function(){
+	
+	var token = localStorage.getItem("token");
+	var messages = serverstub.getUserMessagesByToken(token);
+	document.getElementById("wallContent").innerHTML = "";
+	for(i = 0; i<messages.data.length; ++i){
+		document.getElementById("wallContent").innerHTML += "<div class=\"message\"><b>"+messages.data[i].writer+" says: </b>"+messages.data[i].content+"</div>";
+	}
+	
+}
+
+//Browse
+
+var browsedEmail;
+
+refreshWall = function(){
+	if(browsedEmail != null){
+		var token = localStorage.getItem("token");
+		var messages = serverstub.getUserMessagesByEmail(token, browsedEmail);
+
+		document.getElementById("browseWallContent").innerHTML = "";
+		for(i = 0; i<messages.data.length; ++i){
+			document.getElementById("browseWallContent").innerHTML += "<div class=\"message\"><b>"+messages.data[i].writer+" says: </b>"+messages.data[i].content+"</div>";
+		}
+	}else{
+		alert("You need to browse a user to refresh their wall");
+	}
+}
+
+browseUser = function(form){
+	
+	var token = localStorage.getItem("token");
+	var userData = serverstub.getUserDataByEmail(token, form.email.value);
+	
+	document.getElementById("browseName").innerHTML = "Name: "+userData.data.firstname+" "+userData.data.familyname;
+	document.getElementById("browseGender").innerHTML = "Gender: "+userData.data.gender;
+	document.getElementById("browseCity").innerHTML = "City: "+userData.data.city;
+	document.getElementById("browseCountry").innerHTML = "Country: "+userData.data.country;
+	document.getElementById("browseEmail").innerHTML = "Email: "+userData.data.email;
+	
+	browsedEmail = userData.data.email;
+	
+	refreshWall();
+	
+}
+
+browsePost = function(postText){
+	if(browsedEmail != null){
+		var token = localStorage.getItem("token");
+		var user = serverstub.getUserDataByEmail(token, browsedEmail);
+		var email = user.data.email;
+		
+		var message = serverstub.postMessage(token, postText.browsePostData.value, email);
+		
+		refreshWall();
+	}else{
+		alert("You need to browse a user to post on their wall");
+	}
+	
 }

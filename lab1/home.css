@@ -1,0 +1,45 @@
+
+label{
+    font-size: 14;
+	margin-top: 5px;
+	float: left;
+	width: 246px;
+}
+
+#wall{
+    width: 336px;
+    height: 396px;
+    float: right;
+	
+	border-style: solid;
+    border-width: 2px;
+}
+
+#post{
+    width: 246px;
+    height: 262px;
+    float: left;
+	margin-top: 10px;
+	
+	border-style: solid;
+    border-width: 2px;
+}
+
+#info{
+    width: 246px;
+    height: 120px;
+    float: left;
+	
+	border-style: solid;
+    border-width: 2px;
+}
+
+#homeMain{
+	width: 600px;
+	height: 400px;
+}
+
+#postText{
+	width: 246px;
+	height: 232px;
+}
