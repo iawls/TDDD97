@@ -178,15 +178,20 @@ browseUser = function(form){
 	var token = localStorage.getItem("token");
 	var userData = serverstub.getUserDataByEmail(token, form.email.value);
 	
-	document.getElementById("browseName").innerHTML = "Name: "+userData.data.firstname+" "+userData.data.familyname;
-	document.getElementById("browseGender").innerHTML = "Gender: "+userData.data.gender;
-	document.getElementById("browseCity").innerHTML = "City: "+userData.data.city;
-	document.getElementById("browseCountry").innerHTML = "Country: "+userData.data.country;
-	document.getElementById("browseEmail").innerHTML = "Email: "+userData.data.email;
+	if(userData.success){
+		document.getElementById("browseName").innerHTML = "Name: "+userData.data.firstname+" "+userData.data.familyname;
+		document.getElementById("browseGender").innerHTML = "Gender: "+userData.data.gender;
+		document.getElementById("browseCity").innerHTML = "City: "+userData.data.city;
+		document.getElementById("browseCountry").innerHTML = "Country: "+userData.data.country;
+		document.getElementById("browseEmail").innerHTML = "Email: "+userData.data.email;
+		
+		browsedEmail = userData.data.email;
+		
+		refreshWall();
+	}else{
+		alert(userData.message);
+	}
 	
-	browsedEmail = userData.data.email;
-	
-	refreshWall();
 	
 }
 
