@@ -81,13 +81,28 @@ nav li:hover{
     display: none;
 }
 
+#browseTab{
+    background-color: #dddddd;
+}
+
 #Home{
     display: block;
 }
 
+#homeTab{
+
+}
+
+
 #Account{
     display: none;
 }
+
+#accountTab{
+    background-color: #dddddd;
+}
+
+
 
 #acc_container{
      width: 246px;

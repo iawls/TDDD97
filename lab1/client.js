@@ -103,14 +103,20 @@ tabClick = function(tab){
 	home.style.display = "none";
 	browse.style.display = "none";
 	account.style.display = "none";
+	homeTab.style.backgroundColor = "#dddddd";
+	browseTab.style.backgroundColor = "#dddddd";
+	accountTab.style.backgroundColor = "#dddddd";
 
 	if(tab == Home) {
 		home.style.display = "block";
+		homeTab.style.backgroundColor = "white";
 		getMessages();
 	} else if(tab == Browse) {
 		browse.style.display = "block";
+		browseTab.style.backgroundColor = "white";
 	} else if(tab == Account) {
 		account.style.display = "block";
+		accountTab.style.backgroundColor = "white";
 	}else{
 		console.log("Error in tabClick()");
 	}
