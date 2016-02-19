@@ -1,0 +1,123 @@
+<header>
+</header>
+<body>
+ <div id="main">
+	<nav>
+	  <ul>
+	    <li id="homeTab" onClick="tabClick(Home);">Home</li>
+	    <li id="browseTab" onClick="tabClick(Browse)">Browse</li>
+	    <li id="accountTab" onClick="tabClick(Account)">Account</li>
+	  </ul>
+	</nav>
+
+	<div class="tab" id="Home">
+	  <div id="homeMain">
+	    <div id="info">
+	      <label id="homeName">
+		
+	      </label>
+	      
+	      <label id="homeGender">
+		
+	      </label>
+	      
+	      <label id="homeCity">
+		
+	      </label>
+	      
+	      <label id="homeCountry">
+		
+	      </label>
+	      
+	      <label id="homeEmail">
+		
+	      </label>
+	    </div>
+	    
+	    <div id="wall">
+	      <div id="wallContent">
+	      </div>
+	      <button onClick="getMessages();">Refresh</button>
+	    </div>
+	    
+	    <div id="post">
+	      <form onsubmit="post(this); return false;">
+		<textarea id="postText" name="postData" required></textarea>
+		<input type="submit" value="Post"></input>
+	      </form>
+	    </div>
+	  </div>
+	</div>
+	<div class="tab" id="Browse">
+	  <div id="browseMain">
+	    <div id="browseInfo">
+	      <form onsubmit="browseUser(this); return false;">
+		<input type="email" name="email" required></input>
+		<input type="submit" value="Browse"></input>
+	      </form>
+	      <label id="browseName">
+		
+	      </label>
+	      
+	      <label id="browseGender">
+		
+	      </label>
+	      
+	      <label id="browseCity">
+		
+	      </label>
+	      
+	      <label id="browseCountry">
+		
+	      </label>
+	      
+	      <label id="browseEmail">
+		
+	      </label>
+	    </div>
+	    
+	    <div id="browseWall">
+	      <div id="browseWallContent"></div>
+	      <button onClick="refreshWall();">Refresh</button>
+	    </div>
+	    
+	    <div id="browsePost">
+	      <form onsubmit="browsePost(this); return false;">
+		<textarea id="browsePostText" name="browsePostData" required></textarea>
+		<input type="submit" value="Post"></input>
+	      </form>
+	    </div>
+	  </div>
+	</div>
+
+	<div class="tab" id="Account">
+	  <div id="acc_container">
+	    <form onsubmit="changePassword(this); return false;">
+	      <div class="infoField">
+		<label>
+		  Current password: 	  
+		  <input type="password" name="currPassword" required>
+		</label>
+	      </div>
+	      <div class="infoField">
+		<label>
+		  New password: 	
+		  <input type="password" name="newPassword1" required>
+		</label>
+	      </div>
+	      <div class="infoField">
+		<label>
+		  Repeat password:  	
+		  <input type="password" name="newPassword2" required>
+		</label>
+	      </div>
+	      <div class="infoField">
+		<input type="submit" value="Change password">
+	      </div>
+	    </form>
+	    <div class="infoField">
+	      <input type="button" value="Log out" onclick="logout()">
+	    </div>
+	  </div>
+	</div>
+</body>
