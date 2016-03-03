@@ -1,7 +1,7 @@
 import sqlite3 as lite
 from flask import Flask, g
 
-app = Flask(__name__)
+dbhelper = Flask(__name__)
 
 
 def connect_db():
@@ -14,9 +14,9 @@ def get_db():
     return db
 
 def init_db():
-    with app.app_context():
+    with dbhelper.app_context():
         db = get_db()
-        with app.open_resource('database.schema', mode='r') as f:
+        with dbhelper.open_resource('database.schema', mode='r') as f:
             db.cursor().executescript(f.read())
         db.commit();
 
@@ -37,13 +37,12 @@ def get_message(name):
     return entries[0]['name'] + " says: " + entries[0]['message']
 
 def query_db(query, args=(), one=False):
-    with app.app_context():
+    with dbhelper.app_context():
         c = get_db().execute(query, args)
         get_db().commit()
         response = c.fetchall()
         c.close()
         return (response[0] if response else None) if one else response
-
 
 def add_user(email, password, fname, lname, gender, city, country):
     resp = query_db("INSERT INTO users VALUES (?,?,?,?,?,?,?)", [email, password, fname, lname, gender, city, country])
@@ -53,28 +52,29 @@ def get_user(email):
     resp = query_db("SELECT fname, lname FROM users WHERE email=?", [email])
     return resp
 
-tmp = get_user("admin@asd.com")
-print tmp
+def login(email, token):
+    resp = query_db("INSERT INTO loggedInUsers VALUES (?,?)", [email, token])
+    return resp
 
+def logout(email, token):
+    resp = query_db("DELETE FROM loggedInUsers WHERE email=? AND token=?", [email, token])
+    return resp;
 
+def change_password(email, password):
+    resp = query_db("UPDATE users SET password=? WHERE email=?", [password, email])
+    return resp;
 
-#def login():
-    
+def post_message(sender, reciever, message):
+    resp = query_db("INSERT INTO messages VALUES (?,?,?)", [sender, reciever, message])
+    return resp
 
-#def logout():
-    
+def get_messages(user):
+    resp = query_db("SELECT * FROM messages WHERE reciever=?", [user])
+    return resp
 
-#def change_password():
-    
-
-#def post_message():
-    
-
-#def get_messages():
-    
-
-#def get_user_data():
-    
+def get_user_data(user):
+    resp = query_db("SELECT * FROM users WHERE email=?", [user])
+    return resp
 
 
 
