@@ -48,16 +48,20 @@ def add_user(email, password, fname, lname, gender, city, country):
     resp = query_db("INSERT INTO users VALUES (?,?,?,?,?,?,?)", [email, password, fname, lname, gender, city, country])
     return resp
 
-def get_user(email):
-    resp = query_db("SELECT fname, lname FROM users WHERE email=?", [email])
+def get_user_by_email(email):
+    resp = query_db("SELECT * FROM users WHERE email=?", [email])
+    return resp
+
+def get_user_by_token(token):
+    resp = query_db("SELECT email FROM loggedInUsers WHERE token=?", [token])
     return resp
 
 def login(email, token):
     resp = query_db("INSERT INTO loggedInUsers VALUES (?,?)", [email, token])
     return resp
 
-def logout(email, token):
-    resp = query_db("DELETE FROM loggedInUsers WHERE email=? AND token=?", [email, token])
+def logout(token):
+    resp = query_db("DELETE FROM loggedInUsers WHERE token=?", [token])
     return resp;
 
 def change_password(email, password):
