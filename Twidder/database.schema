@@ -1,0 +1,28 @@
+drop table if exists users;
+drop table if exists loggedInUsers;
+drop table if exists messages;
+
+create table users(
+       email varchar(30),
+       password varchar(30),
+       fname varchar(30),
+       lname varchar(30),
+       gender varchar(30),
+       city varchar(30),
+       country varchar(30),
+       PRIMARY KEY(email)
+);
+
+create table loggedInUsers(
+       email varchar(30),
+       token varchar(36),
+       PRIMARY KEY(token)
+);
+
+create table messages(
+       sender varchar(30),
+       reciever varchar(30),
+       message text
+);
+
+insert into users values('admin@asd.com', '123456', 'Knut', 'Knutsson', 'Male', 'Knutby', 'United Knuts of Knutica (UKK)');
