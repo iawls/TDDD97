@@ -1,0 +1,206 @@
+#main{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 100px;
+    width: 600px;
+    height: 400px;
+}
+
+#errorMsg{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px;
+    width: 600px;
+    height: 40px;
+    text-align: center;
+}
+
+.views{
+    border-style: solid;
+    border-width: 2px;
+}
+
+#wimage{
+    width: 336px;
+    height: 396px;
+    float: left;
+}
+
+#login{
+    width: 246px;
+    height: 86px;
+    float: right;
+}
+
+#signup{
+    margin-top: 10px;
+    width: 246px;
+    height: 296px;
+    float: right;
+}
+
+
+#loginView{
+    margin-top: 0px;
+}
+
+#signupView{
+    margin-top: 1px;
+}
+
+input, select{
+    width: 120px;
+    height: 20px;
+    font-size: 12;
+	float: right;
+}
+
+label{
+    font-size: 14;
+	margin-top: 5px;
+	float: left;
+	width: 246px;
+}
+
+h3{
+    text-align: center;
+}
+
+/*profileView*/
+.tab{
+    border-style: solid;
+    border-width: 2px;
+    width: 596px;
+    height: 396px;
+}
+
+nav li{
+    display: inline;
+    border: solid;
+    border-radius: 5px;
+    padding: 10px;
+    border-width: 1px 1px 1px 1px;
+}
+
+nav li:hover{
+    background-color: lightblue;
+}
+
+#Browse{
+    display: none;
+}
+
+#browseTab{
+    background-color: #dddddd;
+}
+
+#Home{
+    display: block;
+}
+
+#homeTab{
+
+}
+
+
+#Account{
+    display: none;
+}
+
+#accountTab{
+    background-color: #dddddd;
+}
+
+
+
+#acc_container{
+     width: 246px;
+}
+ /* Home tab */
+#wall, #browseWall{
+    width: 336px;
+    height: 396px;
+    float: right;
+	
+	border-left-style: solid;
+    border-width: 2px;
+}
+
+#post{
+    width: 246px;
+    height: 262px;
+    float: left;
+	margin-top: 10px;
+	
+	border-right-style: solid;
+	border-top-style: solid;
+    border-width: 2px;
+}
+
+#info{
+    width: 246px;
+    height: 120px;
+    float: left;
+	
+	border-bottom-style: solid;
+	border-right-style: solid;
+    border-width: 2px;
+}
+
+#homeMain{
+	width: 600px;
+	height: 400px;
+}
+
+#postText, #browsePostText{
+	width: 244px;
+	height: 200px;
+	
+	margin: 1px;
+}
+
+
+#wallContent, #browseWallContent{
+	width: 332px;
+    height: 346px;
+	overflow-y: scroll;
+	
+	border-width: 1px;
+	border-bottom-style: solid;
+}
+
+.message{
+	padding: 10px;
+	border-width: 1px;
+	border-bottom-style: solid;
+
+}
+
+/* Browse */
+
+
+#browseInfo{
+    width: 246px;
+    height: 150px;
+    float: left;
+	
+	border-bottom-style: solid;
+	border-right-style: solid;
+    border-width: 2px;
+}
+
+
+#browsePost{
+	width: 246px;
+    height: 232px;
+    float: left;
+	margin-top: 10px;
+	
+	border-right-style: solid;
+	border-top-style: solid;
+    border-width: 2px;
+
+}
+
+
+
