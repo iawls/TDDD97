@@ -3,8 +3,8 @@ window.onload = function(){
 } 
 
 var xhttp;
+var socket = new WebSocket("ws://localhost:5000/socket");
 
-//var socket = new WebSocket("ws://127.0.0.1:5000/socket");
 
 init = function(){
     //Get the content we want
@@ -24,30 +24,40 @@ init = function(){
     }
 }
 
+socket.onmessage = function(event){
+    console.log("asjdasd");
+}
+
+socket.onopen = function(){
+    console.log("Socket opened");
+    socket.send('Ping');
+}
+
+socket.onclose = function(){
+    console.log("Socket closed");
+}
+
+socket.onerror = function (error) {
+  console.log('WebSocket Error ' + error);
+};
+
+var loggedInEmail;
 
 var login = function(form){
-    console.log("fucking herpderp");
 
     xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = function() {
-	console.log("fucking asdjhasd");
-	console.log(xhttp.readyState);
-	console.log(xhttp.status);
-
 	if (xhttp.readyState == 4 & xhttp.status == 200) {
-	    document.getElementById("errorMsg").innerHTML = "asdkjhadshasdjhasdjafsd";
 	    var response = JSON.parse(xhttp.responseText);
 	    if(response.success == true){
-		document.getElementById("errorMsg").innerHTML = "login";
 		//Logged in, fix token etc
+		loggedInEmail = form.email.value;
 		localStorage.setItem("token", response.data);
-		console.log("fucking derp");
+		socket.send(localStorage.getItem('token'));
+		//load homepage
 		contentView.innerHTML = profileView.innerHTML;
-		console.log("fucking herp");
-	//	getUserData();
-	//	getMessages();
-
+		getUserData();
 	    }else{
 		//Not logged in, promt user to try again
 		document.getElementById("errorMsg").innerHTML = response.message;
@@ -59,28 +69,66 @@ var login = function(form){
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send("email="+form.email.value+"&password="+form.password.value);
 
+}
 
+logout = function(){
+    var token = localStorage.getItem("token");
+    if(token != null){
+	
+	xhttp = new XMLHttpRequest();
+
+	xhttp.onreadystatechange = function() {
+	    if (xhttp.readyState == 4 & xhttp.status == 200) {
+		var response = JSON.parse(xhttp.responseText);
+		if(response.success == true){
+		    //Logged out, fix token etc
+		    localStorage.removeItem("token");
+		    //load welcome page
+		    init();
+		}else{
+		    //Not logged out, prompt user to try again
+		    document.getElementById("errorMsg").innerHTML = response.message;
+		}
+	    }	
+	}
+
+	xhttp.open("POST", "/signout", true);
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.send("token="+token);	
+    }else{
+	document.getElementById("errorMsg").innerHTML = "A problem occurred during log out";
+    }
 }
 
 signup = function(form){
     if(passwordValidation(form.password1.value, form.password2.value)){
 	//This creates a submission object with the values email, password, firstname, familyname, gender, city and country. 
-	var submission = {email: form.email.value, password: form.password1.value, firstname: form.fname.value, familyname: form.lname.value, gender: form.gender.value, city: form.city.value, country: form.country.value};
-	//It sends it onwards to the server.
-	var result = serverstub.signUp(submission);
-	//this tells the user if the creation was succesful or not
-	document.getElementById("errorMsg").innerHTML = result.message;
-	if(result.success){
-	    document.getElementById("fname").value = "";
-	    document.getElementById("lname").value = "";
-	    document.getElementById("city").value = "";
-	    document.getElementById("country").value = "";
-	    document.getElementById("email").value = "";
-	    document.getElementById("password1").value = "";
-	    document.getElementById("password2").value = "";
+	xhttp = new XMLHttpRequest();
+
+	xhttp.onreadystatechange = function() {
+	    if (xhttp.readyState == 4 & xhttp.status == 200) {
+
+		var result = JSON.parse(xhttp.responseText);
+		//this tells the user if the creation was succesful or not
+		document.getElementById("errorMsg").innerHTML = result.message;
+
+		if(result.success){
+		    document.getElementById("fname").value = "";
+		    document.getElementById("lname").value = "";
+		    document.getElementById("city").value = "";
+		    document.getElementById("country").value = "";
+		    document.getElementById("email").value = "";
+		    document.getElementById("password1").value = "";
+		    document.getElementById("password2").value = "";
+		    return true;
+		}
+	    }
 	}
+	xhttp.open("POST", "/signup", true);
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.send("email="+form.email.value+"&password="+form.password1.value+"&fname="+form.fname.value+"&lname="+form.lname.value+"&gender="+form.gender.value+"&city="+form.city.value+"&country="+form.country.value);
     }
-    return false
+    return false;
 }
 
 passwordValidation = function(pwd1, pwd2){
@@ -90,47 +138,50 @@ passwordValidation = function(pwd1, pwd2){
     //check so the password is the correct length
     if(pwd1.length < 6){
 	document.getElementById("errorMsg").innerHTML = "Your password has to be at least 6 characters long!";
-
 	return false;
     }
     
     //check so the passwords match
     if(pwd1 != pwd2){
 	document.getElementById("errorMsg").innerHTML = "The passwords does not match";
-
 	return false;
     }
-    
     //all the other checks are done by HTML5 in the client.html document by using required tags and email-type where necessary.
-    
     return true;
 }
 
 /*profileView*/
 
-changePassword = function(form){
-    console.log("change password");
-    
+changePassword = function(form){    
     if(passwordValidation(form.newPassword1.value, form.newPassword2.value)){
-	var response = serverstub.changePassword(localStorage.getItem("token"), form.currPassword.value, form.newPassword1.value);
-	document.getElementById("errorMsg").innerHTML = response.message;
-	if(response.success){
-	    document.getElementById("currPassword").value = "";
-	    document.getElementById("newPassword1").value = "";
-	    document.getElementById("newPassword2").value = "";
+	
+	var token = localStorage.getItem('token');
+	var old_pw = form.currPassword.value;
+	var new_pw = form.newPassword1.value;
+	
+	xhttp = new XMLHttpRequest();
+
+	xhttp.onreadystatechange = function() {
+	    if (xhttp.readyState == 4 & xhttp.status == 200) {
+		
+		var response = JSON.parse(xhttp.responseText);
+
+		document.getElementById("errorMsg").innerHTML = response.message;
+		if(response.success){
+		    document.getElementById("currPassword").value = "";
+		    document.getElementById("newPassword1").value = "";
+		    document.getElementById("newPassword2").value = "";
+		}
+	    }
 	}
+
+	xhttp.open("POST", "/changepassword", true);
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.send("token="+token+"&old_password="+old_pw+"&new_password="+new_pw);
     }
 }
 
-logout = function(){
-    if(localStorage.getItem("token") != null){
-	localStorage.removeItem("token");
-	init();
-    }else{
-	document.getElementById("errorMsg").innerHTML = "A problem occurred during log out";
 
-    }
-}
 
 
 tabClick = function(tab){
@@ -167,40 +218,73 @@ tabClick = function(tab){
 /*Home tab*/
 
 getUserData = function(){
-    
+    console.log("getUserData");
+    xhttp = new XMLHttpRequest();
     var token = localStorage.getItem("token");
-    var userData = serverstub.getUserDataByToken(token);
-    
-    document.getElementById("homeName").innerHTML = "Name: "+userData.data.firstname+" "+userData.data.familyname;
-    document.getElementById("homeGender").innerHTML = "Gender: "+userData.data.gender;
-    document.getElementById("homeCity").innerHTML = "City: "+userData.data.city;
-    document.getElementById("homeCountry").innerHTML = "Country: "+userData.data.country;
-    document.getElementById("homeEmail").innerHTML = "Email: "+userData.data.email;
+    console.log(token);
+    xhttp.onreadystatechange = function() {
+	if (xhttp.readyState == 4 & xhttp.status == 200) {
+
+	    var userData = JSON.parse(xhttp.responseText);
+	    console.log(userData.message);
+	    console.log(userData.email);
+	    if(userData.success == true){
+		document.getElementById("homeName").innerHTML = "Name: "+userData.fname+" "+userData.lname;
+		document.getElementById("homeGender").innerHTML = "Gender: "+userData.gender;
+		document.getElementById("homeCity").innerHTML = "City: "+userData.city;
+		document.getElementById("homeCountry").innerHTML = "Country: "+userData.country;
+		document.getElementById("homeEmail").innerHTML = "Email: "+userData.email;
+		getMessages();
+	    }else{
+		document.getElementById("errorMsg").innerHTML = userData.message;
+	    }
+	}
+    }
+
+	xhttp.open("GET", "/getuserdatabytoken?token="+token, true);
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.send();
 }
 
 post = function(postText){
-
+    xhttp = new XMLHttpRequest();
     var token = localStorage.getItem("token");
-    var user = serverstub.getUserDataByToken(token);
-    var email = user.data.email;
-    
-    console.log(postText.postData.value);
-    var message = serverstub.postMessage(token, postText.postData.value, email);
-    
-    getMessages();
+    var reciever = loggedInEmail;
+    xhttp.onreadystatechange = function() {
+	if (xhttp.readyState == 4 & xhttp.status == 200) {
+	    var response = JSON.parse(xhttp.responseText);
+	    if(response.success == true){
+		document.getElementById("postText").value ="";
+		getMessages();		
+	    }else{
+		document.getElementById("errorMsg").innerHTML = response.message;
+	    }
+	}
+    }
+    xhttp.open("POST", "/postmessage", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("token="+token+"&message="+postText.postData.value+"&email="+reciever);
 
-    document.getElementById("postText").value ="";
 }
 
 getMessages = function(){
-    
+    xhttp = new XMLHttpRequest();
     var token = localStorage.getItem("token");
-    var messages = serverstub.getUserMessagesByToken(token);
-    document.getElementById("wallContent").innerHTML = "";
-    for(i = 0; i<messages.data.length; ++i){
-	document.getElementById("wallContent").innerHTML += "<div class=\"message\"><b>"+messages.data[i].writer+" says: </b>"+messages.data[i].content+"</div>";
+    xhttp.onreadystatechange = function() {
+	if (xhttp.readyState == 4 & xhttp.status == 200) {
+	    
+	    var messages = JSON.parse(xhttp.responseText);
+
+	    document.getElementById("wallContent").innerHTML = "";
+	    for(i = 0; i<messages.data.length; ++i){
+		document.getElementById("wallContent").innerHTML += "<div class=\"message\"><b>"+messages.data[i][0]+" says: </b>"+messages.data[i][2]+"</div>";
+	    }
+	}
     }
-    
+
+    xhttp.open("GET", "/getusermessagesbytoken?token="+token, true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send();
 }
 
 //Browse
@@ -209,13 +293,23 @@ var browsedEmail;
 
 refreshWall = function(){
     if(browsedEmail != null){
+	xhttp = new XMLHttpRequest();
 	var token = localStorage.getItem("token");
-	var messages = serverstub.getUserMessagesByEmail(token, browsedEmail);
+	xhttp.onreadystatechange = function() {
+	    if (xhttp.readyState == 4 & xhttp.status == 200) {
+		
+		var messages = JSON.parse(xhttp.responseText);
 
-	document.getElementById("browseWallContent").innerHTML = "";
-	for(i = 0; i<messages.data.length; ++i){
-	    document.getElementById("browseWallContent").innerHTML += "<div class=\"message\"><b>"+messages.data[i].writer+" says: </b>"+messages.data[i].content+"</div>";
+		document.getElementById("browseWallContent").innerHTML = "";
+		for(i = 0; i<messages.data.length; ++i){
+		    document.getElementById("browseWallContent").innerHTML += "<div class=\"message\"><b>"+messages.data[i][0]+" says: </b>"+messages.data[i][2]+"</div>";
+		}
+	    }
 	}
+
+	xhttp.open("GET", "/getusermessagesbyemail?token="+token+"&email="+browsedEmail, true);
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.send();
     }else{
 	document.getElementById("errorMsg").innerHTML = "You need to browse a user to refresh their wall";
 
@@ -223,38 +317,54 @@ refreshWall = function(){
 }
 
 browseUser = function(form){
-    
+    browsedEmail = form.email.value;
+    xhttp = new XMLHttpRequest();
     var token = localStorage.getItem("token");
-    var userData = serverstub.getUserDataByEmail(token, form.email.value);
-    
-    if(userData.success){
-	document.getElementById("browseName").innerHTML = "Name: "+userData.data.firstname+" "+userData.data.familyname;
-	document.getElementById("browseGender").innerHTML = "Gender: "+userData.data.gender;
-	document.getElementById("browseCity").innerHTML = "City: "+userData.data.city;
-	document.getElementById("browseCountry").innerHTML = "Country: "+userData.data.country;
-	document.getElementById("browseEmail").innerHTML = "Email: "+userData.data.email;
-	
-	browsedEmail = userData.data.email;
-	
-	refreshWall();
-    }else{
-	document.getElementById("errorMsg").innerHTML = userData.message;
+    console.log(token);
+    xhttp.onreadystatechange = function() {
+	if (xhttp.readyState == 4 & xhttp.status == 200) {
 
+	    var userData = JSON.parse(xhttp.responseText);
+	    console.log(userData.message);
+	    console.log(userData.email);
+	    if(userData.success == true){
+		document.getElementById("browseName").innerHTML = "Name: "+userData.fname+" "+userData.lname;
+		document.getElementById("browseGender").innerHTML = "Gender: "+userData.gender;
+		document.getElementById("browseCity").innerHTML = "City: "+userData.city;
+		document.getElementById("browseCountry").innerHTML = "Country: "+userData.country;
+		document.getElementById("browseEmail").innerHTML = "Email: "+userData.email;
+		refreshWall();
+	    }else{
+		document.getElementById("errorMsg").innerHTML = userData.message;
+	    }
+	}
     }
-    
-    
+
+	xhttp.open("GET", "/getuserdatabyemail?token="+token+"&email="+browsedEmail, true);
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.send();
 }
 
 browsePost = function(postText){
     if(browsedEmail != null){
+	xhttp = new XMLHttpRequest();
 	var token = localStorage.getItem("token");
-	var user = serverstub.getUserDataByEmail(token, browsedEmail);
-	var email = user.data.email;
-	
-	var message = serverstub.postMessage(token, postText.browsePostData.value, email);
-	
-	refreshWall();
-	document.getElementById("browsePostText").value ="";
+	var reciever = browsedEmail;
+	xhttp.onreadystatechange = function() {
+	    if (xhttp.readyState == 4 & xhttp.status == 200) {
+		var response = JSON.parse(xhttp.responseText);
+		if(response.success == true){
+		    document.getElementById("browsePostText").value ="";
+		    refreshWall();		
+		}else{
+		    document.getElementById("errorMsg").innerHTML = response.message;
+		}
+	    }
+	}
+	xhttp.open("POST", "/postmessage", true);
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.send("token="+token+"&message="+postText.browsePostData.value+"&email="+reciever);
+
     }else{
 	document.getElementById("errorMsg").innerHTML = "You need to browse a user to post on their wall";
     }
