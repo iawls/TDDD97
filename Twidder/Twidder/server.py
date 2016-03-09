@@ -2,6 +2,7 @@ from flask import Flask, jsonify, request
 from Twidder import app
 import database_helper
 from random import randint
+import json
 
 
 @app.route("/")
@@ -11,7 +12,14 @@ def root():
 
 @app.route("/socket")
 def forcelogout():
-    return
+    if request.environ.get('wsgi.websocket'):
+        ws = request.environ['wsgi.websocket']
+        while True:
+           message = ws.wait()
+           ws.send(message)
+    return ""
+
+
 
 
 @app.route("/signin", methods=['POST'])
@@ -93,7 +101,7 @@ def get_user_data_by_token():
     if len(user) > 0:
         userdata = database_helper.get_user_by_email(user[0][0])
         if len(userdata) > 0:
-            return jsonify(success = True, message = "Data successfully got", data = [userdata[0][0], userdata[0][2], userdata[0][3], userdata[0][4], userdata[0][5], userdata[0][6]])
+            return jsonify(success= True, message = "Data successfully retrieved", email = userdata[0][0], fname = userdata[0][2], lname = userdata[0][3], gender = userdata[0][4], city = userdata[0][5], country = userdata[0][6])
         else:
             return jsonify(success = False, message = "Something went terribly wrong, this shouldn't happen")
 
@@ -108,7 +116,7 @@ def get_user_data_by_email():
     if len(userFromToken) > 0:
         userdata = database_helper.get_user_by_email(email)
         if len(userdata) > 0:
-            return jsonify(success = True, data = [userdata[0][0], userdata[0][2], userdata[0][3], userdata[0][4], userdata[0][5], userdata[0][6]], message = "Successfully retrieved data")
+            return jsonify(success= True, message = "Data successfully retrieved", email = userdata[0][0], fname = userdata[0][2], lname = userdata[0][3], gender = userdata[0][4], city = userdata[0][5], country = userdata[0][6])
         else:
             return jsonify(success = False, message = "No such user")
     else:
@@ -121,7 +129,7 @@ def get_user_messages_by_token():
     if len(user) > 0:
         messages = database_helper.get_messages(user[0][0])
         if len(messages) > 0:
-            return jsonify(success = True, data = messages, message = "Successfully got user data")
+            return json.dumps({'success': True, 'data': messages, 'message': "Successfully got user data"})
         else:
             return jsonify(success = False, message = "User has no messages")
     else:
