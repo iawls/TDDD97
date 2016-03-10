@@ -97,8 +97,9 @@ logout = function(){
 		var response = JSON.parse(xhttp.responseText);
 		if(response.success == true){
 		    //Logged out, fix token etc
-		    socketHelper(false);
+		    //socketHelper(false);
 		    localStorage.removeItem("token");
+		    console.log("token removed");
 		    //load welcome page
 		    init();
 		}else{
