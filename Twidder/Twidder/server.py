@@ -17,17 +17,17 @@ def autologout():
         ws = request.environ['wsgi.websocket']
         while True:
             data = ws.receive()
-            print data
+            print "[autologout] data: "+data
             if data != None :
                 try:
                     if curr_connections[data] :
                         tmpsocket = curr_connections[data]
-                        print "Closing socket"
+                        print "[autologout]: Closing socket"
                         tmpsocket.send("close")
                         tmpsocket.close()
                         curr_connections[data] = ws
                 except:
-                        print "adding new connection"
+                        print "[autologout]: Adding new connection"
                         curr_connections[data] = ws                
         return ''
 
@@ -62,12 +62,14 @@ def sign_in():
 def sign_out():
     token=request.values.get('token')
     user = database_helper.get_user_by_token(token)
+    print "[sign_out] user: "+user[0][0]
     if(len(user) == 0):
         return jsonify(success = False, message = "You are not signed in")
     else:
         resp=database_helper.logout(token)
-        print user
         try:
+            for tmp in curr_connections:
+                print tmp
             del curr_connections[user[0][0]]
         except:
             print "curr_connections didnt have the specified key"
