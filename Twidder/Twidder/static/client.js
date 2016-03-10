@@ -3,16 +3,14 @@ window.onload = function(){
 } 
 
 var xhttp;
-var socket = new WebSocket("ws://localhost:5000/socket");
-
 
 init = function(){
+
     //Get the content we want
     var contentView = document.getElementById("contentView");
     var welcomeView = document.getElementById("welcomeView");
     var profileView = document.getElementById("profileView");
     //Paste that mofo in there
-    
     if(localStorage.getItem("token") != null){
 	//Logged in, load Profile View
 	contentView.innerHTML = profileView.innerHTML;
@@ -24,29 +22,46 @@ init = function(){
     }
 }
 
-socket.onmessage = function(event){
-    console.log("asjdasd");
-}
-
-socket.onopen = function(){
-    console.log("Socket opened");
-    socket.send('Ping');
-}
-
-socket.onclose = function(){
-    console.log("Socket closed");
-}
-
-socket.onerror = function (error) {
-  console.log('WebSocket Error ' + error);
-};
-
 var loggedInEmail;
 
+socketHelper = function (login){
+    var socket = new WebSocket("ws://localhost:5000/socket");
+
+    if(login == true){
+	
+	socket.onmessage = function(event){
+	    console.log(event.data);
+	    if(event.data == "close"){
+		logout();
+	    }
+
+	}
+
+	socket.onopen = function(){
+	    console.log("Socket opened");
+	    socket.send(loggedInEmail);
+	}
+
+	socket.onclose = function(){
+	    console.log("Socket closed");
+	}
+
+	socket.onerror = function (error) {
+	    console.log('WebSocket Error ' + error);
+	};
+
+    }else{
+	socket.close();
+    }
+}
+
+
+
+
+
 var login = function(form){
-
+    
     xhttp = new XMLHttpRequest();
-
     xhttp.onreadystatechange = function() {
 	if (xhttp.readyState == 4 & xhttp.status == 200) {
 	    var response = JSON.parse(xhttp.responseText);
@@ -54,7 +69,7 @@ var login = function(form){
 		//Logged in, fix token etc
 		loggedInEmail = form.email.value;
 		localStorage.setItem("token", response.data);
-		socket.send(localStorage.getItem('token'));
+		socketHelper(true);
 		//load homepage
 		contentView.innerHTML = profileView.innerHTML;
 		getUserData();
@@ -82,6 +97,7 @@ logout = function(){
 		var response = JSON.parse(xhttp.responseText);
 		if(response.success == true){
 		    //Logged out, fix token etc
+		    socketHelper(false);
 		    localStorage.removeItem("token");
 		    //load welcome page
 		    init();
@@ -274,10 +290,11 @@ getMessages = function(){
 	if (xhttp.readyState == 4 & xhttp.status == 200) {
 	    
 	    var messages = JSON.parse(xhttp.responseText);
-
-	    document.getElementById("wallContent").innerHTML = "";
-	    for(i = 0; i<messages.data.length; ++i){
-		document.getElementById("wallContent").innerHTML += "<div class=\"message\"><b>"+messages.data[i][0]+" says: </b>"+messages.data[i][2]+"</div>";
+	    if(messages.success){
+		document.getElementById("wallContent").innerHTML = "";
+		for(i = 0; i<messages.data.length; ++i){
+		    document.getElementById("wallContent").innerHTML += "<div class=\"message\"><b>"+messages.data[i][0]+" says: </b>"+messages.data[i][2]+"</div>";
+		}
 	    }
 	}
     }
