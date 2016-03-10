@@ -9,18 +9,32 @@ import json
 def root():
     return app.send_static_file("client.html")
 
+curr_connections = dict()
 
 @app.route("/socket")
-def forcelogout():
+def autologout():
     if request.environ.get('wsgi.websocket'):
         ws = request.environ['wsgi.websocket']
         while True:
-           message = ws.wait()
-           ws.send(message)
-    return ""
+            data = ws.receive()
+            print data
+            if data != None :
+                try:
+                    if curr_connections[data] :
+                        tmpsocket = curr_connections[data]
+                        print "Closing socket"
+                        tmpsocket.send("close")
+                        tmpsocket.close()
+                        curr_connections[data] = ws
+                except:
+                        print "adding new connection"
+                        curr_connections[data] = ws                
+        return ''
 
-
-
+                    #    for user in curr_connections:
+                     #       if user != data:
+                      #          if curr_connections[user] == tmpsocket:
+                       #             socketCheck = true
 
 @app.route("/signin", methods=['POST'])
 def sign_in():
@@ -52,6 +66,11 @@ def sign_out():
         return jsonify(success = False, message = "You are not signed in")
     else:
         resp=database_helper.logout(token)
+        print user
+        try:
+            del curr_connections[user[0][0]]
+        except:
+            print "curr_connections didnt have the specified key"
         return jsonify(success = True, message = "Successfully logged out")
 
 @app.route("/signup", methods=['POST'])

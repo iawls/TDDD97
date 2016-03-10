@@ -38,7 +38,6 @@ def get_message(name):
 
 def query_db(query, args=(), one=False):
     with dbhelper.app_context():
-        print query
         c = get_db().execute(query, args)
         get_db().commit()
         response = c.fetchall()
@@ -82,4 +81,6 @@ def get_user_data(user):
     return resp
 
 
-
+def get_logged_in_user(user):
+    resp = query_db("SELECT * FROM loggedInUsers WHERE email=?", [user])
+    return resp
