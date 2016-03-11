@@ -1,5 +1,11 @@
 window.onload = function(){
     init();
+
+    var fileinput = document.getElementById("fileinput");
+    if(fileinput)
+	fileinput.addEventListener('change', uploadFile, false);
+    else
+	console.log("Something fucked up, ggwp fileupload");
 } 
 
 var xhttp;
@@ -294,7 +300,7 @@ getMessages = function(){
 	    if(messages.success){
 		document.getElementById("wallContent").innerHTML = "";
 		for(i = 0; i<messages.data.length; ++i){
-		    document.getElementById("wallContent").innerHTML += "<div class=\"message\"><b>"+messages.data[i][0]+" says: </b>"+messages.data[i][2]+"</div>";
+		    document.getElementById("wallContent").innerHTML += "<div id=\"message"+i+"\"class=\"message\" draggable=\"true\" ondragstart=\"drag(event)\"><b>"+messages.data[i][0]+" says: </b>"+messages.data[i][2]+"</div>";
 		}
 	    }
 	}
@@ -320,7 +326,7 @@ refreshWall = function(){
 
 		document.getElementById("browseWallContent").innerHTML = "";
 		for(i = 0; i<messages.data.length; ++i){
-		    document.getElementById("browseWallContent").innerHTML += "<div class=\"message\"><b>"+messages.data[i][0]+" says: </b>"+messages.data[i][2]+"</div>";
+		    document.getElementById("browseWallContent").innerHTML += "<div id=\"message"+i+"\" class=\"message\" draggable=\"true\" ondragstart=\"drag(event)\" ><b>"+messages.data[i][0]+" says: </b>"+messages.data[i][2]+"</div>";
 		}
 	    }
 	}
@@ -388,3 +394,50 @@ browsePost = function(postText){
     }
     
 }
+
+/*Draggable messages*/
+
+
+function allowDrop(ev) {
+    ev.preventDefault();
+}
+
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    var text = document.getElementById(data).innerHTML;
+    var tmp = text.indexOf("</b>");
+    text = text.substring(tmp+4, text.length)
+    document.getElementById("postText").value=text;
+}
+function browseDrop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    var text = document.getElementById(data).innerHTML;
+    var tmp = text.indexOf("</b>");
+    text = text.substring(tmp+4, text.length)
+    document.getElementById("browsePostText").value=text;
+}
+
+
+/*Streaming*/
+
+function uploadFile(){
+    var url = '/upload';
+    var xhr = new XMLHttpRequest();
+    var fd = new FormData();
+    xhr.open("POST", url, true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            // Every thing ok, file uploaded
+            console.log(xhr.responseText); // handle response.
+        }
+    };
+    fd.append("upload_file", this.files[0]);
+    xhr.send(fd);
+}
+

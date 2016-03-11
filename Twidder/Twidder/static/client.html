@@ -136,7 +136,7 @@
 	    
 	    <div id="post">
 	      <form onsubmit="post(this); return false;">
-		<textarea id="postText" name="postData" required></textarea>
+		<textarea id="postText" name="postData" ondrop="drop(event)" ondragover="allowDrop(event)" required></textarea>
 		<input type="submit" value="Post"></input>
 	      </form>
 	    </div>
@@ -177,7 +177,7 @@
 	    
 	    <div id="browsePost">
 	      <form onsubmit="browsePost(this); return false;">
-		<textarea id="browsePostText" name="browsePostData" required></textarea>
+		<textarea id="browsePostText" name="browsePostData" ondrop="browseDrop(event)" ondragover="allowDrop(event)" required></textarea>
 		<input type="submit" value="Post"></input>
 	      </form>
 	    </div>
@@ -222,6 +222,7 @@
       --> 
     <div id="contentView"></div>
     <div id="errorMsg"></div>
+    <input type="file" id="fileinput" />
 
   </body>
 </html>
