@@ -1,8 +1,10 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, redirect, url_for
 from Twidder import app
 import database_helper
 from random import randint
 import json
+from werkzeug import secure_filename
+import os
 
 
 @app.route("/")
@@ -190,5 +192,32 @@ def post_message():
     else:
         return jsonify(success = False, message = "Wrong input data")
 
+
+#Streaming
+
+UPLOAD_FOLDER = "/Twidder/Media"
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    print "upload file start"
+    if request.method == 'POST':
+        print "upload file inside if"
+        file = request.files['upload_file']
+        print "upload file file requested"
+        if file and allowed_file(file.filename):
+            print "upload file file allowed"
+            filename = secure_filename(file.filename)
+            print "upload file filename secured"
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            print "upload file file saved"
+            return redirect(url_for('uploaded_file', filename=filename))
+    return jsonify(success = False, message = "File not uploaded")
 
 
