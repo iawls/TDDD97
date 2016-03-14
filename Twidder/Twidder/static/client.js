@@ -9,6 +9,7 @@ window.onload = function(){
 } 
 
 var xhttp;
+var loggedInEmail;
 
 init = function(){
 
@@ -16,23 +17,32 @@ init = function(){
     var contentView = document.getElementById("contentView");
     var welcomeView = document.getElementById("welcomeView");
     var profileView = document.getElementById("profileView");
+
+    if (localStorage.getItem("loggedInEmail") != null){
+	loggedInEmail = localStorage.getItem("loggedInEmail");
+	console.log("socketHelper");
+	socketHelper(true);
+    }
     //Paste that mofo in there
     if(localStorage.getItem("token") != null){
 	//Logged in, load Profile View
 	contentView.innerHTML = profileView.innerHTML;
 	getUserData();
-	getMessages();
     }else{
 	//Not logged in, load welcomeView
 	contentView.innerHTML = welcomeView.innerHTML;
     }
 }
 
-var loggedInEmail;
 
 socketHelper = function (login){
-    var socket = new WebSocket("ws://localhost:5000/socket");
 
+    var socketExists = false;
+
+    if(!socketExists){
+	var socket = new WebSocket("ws://localhost:5000/socket");
+	socketExists = true;
+    }
     if(login == true){
 	
 	socket.onmessage = function(event){
@@ -58,6 +68,7 @@ socketHelper = function (login){
 
     }else{
 	socket.close();
+	socketExists = false;
     }
 }
 
@@ -73,8 +84,9 @@ var login = function(form){
 	    var response = JSON.parse(xhttp.responseText);
 	    if(response.success == true){
 		//Logged in, fix token etc
-		loggedInEmail = form.email.value;
 		localStorage.setItem("token", response.data);
+		localStorage.setItem("loggedInEmail", form.email.value);
+		loggedInEmail = form.email.value;
 		socketHelper(true);
 		//load homepage
 		contentView.innerHTML = profileView.innerHTML;
@@ -105,6 +117,7 @@ logout = function(){
 		    //Logged out, fix token etc
 		    //socketHelper(false);
 		    localStorage.removeItem("token");
+		    localStorage.removeItem("loggedInEmail");
 		    console.log("token removed");
 		    //load welcome page
 		    init();
@@ -244,14 +257,19 @@ getUserData = function(){
     console.log("getUserData");
     xhttp = new XMLHttpRequest();
     var token = localStorage.getItem("token");
-    console.log(token);
+    console.log("[getUserData] token: "+token);
+    console.log("[getUserData] loggedInEmail: "+loggedInEmail);
     xhttp.onreadystatechange = function() {
-	if (xhttp.readyState == 4 & xhttp.status == 200) {
+	console.log("[getUserData] xhttp status: "+xhttp.status);
+	console.log("[getUserData] xhttp readystate: "+xhttp.readyState);
 
+	if (xhttp.readyState == 4 & xhttp.status == 200) {
+	    console.log("[getUserData] inside xhttp readystate");
 	    var userData = JSON.parse(xhttp.responseText);
 	    console.log(userData.message);
 	    console.log(userData.email);
 	    if(userData.success == true){
+		console.log("[getUserData] userData.success: true");
 		document.getElementById("homeName").innerHTML = "Name: "+userData.fname+" "+userData.lname;
 		document.getElementById("homeGender").innerHTML = "Gender: "+userData.gender;
 		document.getElementById("homeCity").innerHTML = "City: "+userData.city;
@@ -273,6 +291,8 @@ post = function(postText){
     xhttp = new XMLHttpRequest();
     var token = localStorage.getItem("token");
     var reciever = loggedInEmail;
+    console.log("[post] token: "+token);
+    console.log("[post] reciever: "+reciever);
     xhttp.onreadystatechange = function() {
 	if (xhttp.readyState == 4 & xhttp.status == 200) {
 	    var response = JSON.parse(xhttp.responseText);
