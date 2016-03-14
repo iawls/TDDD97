@@ -20,6 +20,13 @@ def autologout():
         while True:
             data = ws.receive()
             print "[autologout] data: "+data
+            for tmp in curr_connections:
+                print "[autologout] curr_connections: "+tmp 
+                if ws == curr_connections[tmp]:
+                    del curr_connections[tmp]
+                    print "[autologout] deleted from curr_connections"
+                    for tmp2 in curr_connections:
+                        print "[autologout] curr_connections: "+tmp2
             if data != None :
                 try:
                     if curr_connections[data] :
@@ -29,8 +36,8 @@ def autologout():
                         tmpsocket.close()
                         curr_connections[data] = ws
                 except:
-                        print "[autologout]: Adding new connection"
-                        curr_connections[data] = ws                
+                    print "[autologout]: Adding new connection"
+                    curr_connections[data] = ws                
         return ''
 
                     #    for user in curr_connections:
@@ -69,12 +76,7 @@ def sign_out():
         return jsonify(success = False, message = "You are not signed in")
     else:
         resp=database_helper.logout(token)
-        try:
-            for tmp in curr_connections:
-                print tmp
-            del curr_connections[user[0][0]]
-        except:
-            print "curr_connections didnt have the specified key"
+        del curr_connections[user[0][0]]
         return jsonify(success = True, message = "Successfully logged out")
 
 @app.route("/signup", methods=['POST'])
@@ -215,6 +217,7 @@ def upload_file():
             print "upload file file allowed"
             filename = secure_filename(file.filename)
             print "upload file filename secured"
+            print
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             print "upload file file saved"
             return redirect(url_for('uploaded_file', filename=filename))
