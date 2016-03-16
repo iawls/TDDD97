@@ -68,8 +68,8 @@ def change_password(email, password):
     resp = query_db("UPDATE users SET password=? WHERE email=?", [password, email])
     return resp;
 
-def post_message(sender, reciever, message, isMedia):
-    resp = query_db("INSERT INTO messages VALUES (?,?,?,?)", [sender, reciever, message, isMedia])
+def post_message(sender, reciever, message):
+    resp = query_db("INSERT INTO messages VALUES (?,?,?)", [sender, reciever, message])
     return resp
 
 def get_messages(user):

@@ -22,7 +22,7 @@ create table loggedInUsers(
 create table messages(
        sender varchar(30),
        reciever varchar(30),
-       message text,
+       message text
        isMedia text
 );
 

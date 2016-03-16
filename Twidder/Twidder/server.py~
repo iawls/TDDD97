@@ -70,22 +70,13 @@ def sign_in():
 @app.route("/signout", methods=['POST'])
 def sign_out():
     token=request.values.get('token')
-    type_=request.values.get('type')
     user = database_helper.get_user_by_token(token)
     print "[sign_out] user: "+user[0][0]
     if(len(user) == 0):
         return jsonify(success = False, message = "You are not signed in")
     else:
         resp=database_helper.logout(token)
-
-        try:
-            if (type_ == "normal"):
-                del curr_connections[user[0][0]]
-                print "[sign_out] del:"
-            else:
-                print "[sign_out] autologout:"
-        except:
-            print "[sign_out] except:"
+        del curr_connections[user[0][0]]
         return jsonify(success = True, message = "Successfully logged out")
 
 @app.route("/signup", methods=['POST'])

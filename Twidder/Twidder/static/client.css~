@@ -173,7 +173,6 @@ nav li:hover{
 	padding: 10px;
 	border-width: 1px;
 	border-bottom-style: solid;
-	word-break: break-all;
 }
 
 /* Browse */
